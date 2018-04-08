@@ -1,0 +1,51 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	background-color: pink;
+}
+/*设置画框的样式*/
+#box {
+	width: 520px;
+	height: 333px;
+	background-color: lightgoldenrodyellow;
+	margin: 180px auto;
+	padding: 15px 0;
+	position: relative;
+	overflow: hidden;
+}
+/*给ul开启定位 利用js设置其宽度 可以随意增加图片数量*/ 
+#imgList {
+	list-style: none;
+	position: absolute;
+	left:0 ;
+	
+}
+/*设置图片之间的外边距*/
+#imgList li{
+	float: left;
+	margin: 0 10px;
+	
+}
+/*给轮播图的导航条开启绝对定位*/
+#nav {
+	position: absolute;
+	bottom: 20px;
+}
+/*给每个小红块设置样式*/
+#nav a{
+	float: left;
+	width: 15px;
+	height: 15px;
+	background-color: red;
+	margin: 0 5px;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
+/*给红块添加鼠标移入效果*/
+#nav a:hover{
+	background-color: black ;
+}
+

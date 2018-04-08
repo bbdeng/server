@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>轮播图</title>
+		<link rel="stylesheet" type="text/css" href="css/page-index.css"/>
+		<!--引入之前制作的move动态函数-->
+		<script src="js/move.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			window.onload=function(){
+				var imgList=document.getElementById("imgList");
+				var imgArr=document.getElementsByTagName("li");
+				//设置imgList的宽度 可以随意添加图片的数量 宽度随之变化
+				imgList.style.width=520*imgArr.length+"px";
+				var box=document.getElementById("box");
+				var nav=document.getElementById("nav");
+				//要让nav居中 就是要让nav的左偏移=（box的可见宽度-nav的可见宽度）/2
+				nav.style.left=(box.offsetWidth-nav.offsetWidth)/2 + "px";
+				//获取所有导航图
+				var as=document.getElementsByTagName("a");
+				//默认显示图片的索引
+				var index=0;
+				//设置默认显示的效果
+				as[0].style.backgroundColor="black";
+				//点击小红块可以达到切换图片的效果
+				//要点击每个小红块先给所有的红块绑定单击响应函数
+				for (var i=0;i<as.length;i++){
+					//为每一个小红块都添加一个num属性
+					as[i].num=i;
+					as[i].onclick=function(){
+						//为了让单击选择优先自动轮播，在这里单击的时候关闭计时器
+						clearInterval(timer);
+						
+						//然后把num属性值传递给index，修正其索引值
+						//这里的this是调用方法的对象
+						index=this.num;
+						//然后通过修改imgList图片水平的偏移量来达到切换图片的效果
+						//第一张图片，0 -520px 第二张图片 1 -1040px  第三张图片2 -1560px
+						//直接切换缺少动态效果，这里采用引用之前的写js的动态滑动效果
+						//imgList.style.left=index*(-520)+"px";
+						
+						//obj定义需要执行动画的对象
+						//attr要执行动画的样式,比如:height top let width
+						//target为元素需要移动的位置
+						//speed动画移动的速度 填写正值即可
+						//callback回调函数
+						move(imgList,"left",-520*index,20,function(){
+							//在move回调函数中重新开启计时器，这个move的回调函数是在所有动画执行完毕后才会执行
+							autoChange();
+							
+						});
+						
+						//注意一定要将setA的方法在单击响应函数中调用
+						setA();
+					};
+					
+				};
+					//开启自动切换图片
+					autoChange();
+					//设置一个变量timer来给定时器标记
+					var timer;
+					//创建一个函数，用来开启自动切换图片
+					function autoChange(){
+						
+						//开启定时器用来切换图片
+						timer=setInterval(function(){
+							//使索引自增 这里index不能一直增大
+							index++;
+							//判断index的值
+							if (index>as.length){
+								index=0;
+							};
+							move(imgList,"left",-520*index,20,function(){
+								//这里导航没有改变，通过回调函数调整
+								setA();
+							});
+							
+							
+							
+						},3000);
+						
+						
+					};
+					
+					
+					//创建一个方法用来设置被选中的a变色
+					function setA (){
+						//解决计时时候导航条不跳转的问题
+						//出现该问题的原因是增加了一张图片，as.length就增加了
+						//当到达第6张图片的时候，index的值应该等于5（012345），但是只有5个红块，缺少1个
+						if(index>=imgArr.length-1){
+							//这里直接将index设置为0就可以让导航块从第6个直接跳到第1个
+							index=0;
+							//顺便设置图片从第6张秒切换到第1张达到一个流程的效果
+							//因为第6张和第1张图片是一模一样的，直接通过CSS样式调整偏移量到达第1张
+							//进入这个判断说明才达到第6张图片，所以这个css必须设置在这个判断中
+							imgList.style.left=0;
+						}
+							
+						
+					//首先遍历所有的a
+					for(var i=0;i<as.length;i++){
+						//并将所有的a的颜色设置为红色
+						//注意这里不能设置为red，因为js会直接在内联样式中修改颜色
+						//这样会导致样式表中的hover颜色效果被覆盖，这里采用输入空值的方式，默认为空值就会直接采用样式表中的颜色
+						as[i].style.backgroundColor="";
+					}
+						as[index].style.backgroundColor="black";
+				};
+				
+				
+			};
+		</script>
+		
+	</head>
+	<body>
+		<div id="box">
+			<ul id="imgList">
+				<li><img src="img/1.jpg" /> </li>
+				<li><img src="img/2.jpg" /> </li>
+				<li><img src="img/3.jpg" /> </li>
+				<li><img src="img/4.jpg" /> </li>
+				<li><img src="img/5.jpg" /> </li>
+				<li><img src="img/1.jpg" /> </li>
+				
+			</ul>
+			<div id="nav">
+				<a href="javascript:;"> </a>
+				<a href="javascript:;"> </a>
+				<a href="javascript:;"> </a>
+				<a href="javascript:;"> </a>
+				<a href="javascript:;"> </a>
+				
+			</div>
+		</div>
+	</body>
+</html>
